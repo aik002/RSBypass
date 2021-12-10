@@ -57,16 +57,19 @@ void* FindPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
         void* ptr = FindPattern(segStart, segLen, (BYTE*)hint, "xxxxxxxxx");
         if (ptr) {
             
-            long page_size = sysconf(_SC_PAGESIZE);
+            //long page_size = sysconf(_SC_PAGESIZE);
+            long page_size = vm_page_size;
+            NSLog(@"Page size: %ld", page_size);
             
             void* page_start = (long)ptr & -page_size;
+            NSLog(@"Page start: %@", page_start);
             
             NSLog(@"Attempting Removing memory protection");
             if(mprotect(page_start, page_size, PROT_READ | PROT_WRITE) == 0){
             	
             NSLog(@"RSInjector: Bypassing signature check at %p", ptr);
-            memset(ptr, 0x90, 9);
-            msync(ptr, 9, MS_SYNC);
+            // memset(ptr, 0x90, 9);
+            // msync(ptr, 9, MS_SYNC);
             
             mprotect(page_start, page_size, PROT_READ | PROT_EXEC);
             }else{
@@ -125,6 +128,7 @@ void* FindPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
 
 uint64_t find_image_load_address() {
     //uint64_t addr = 0; unused
+    
     kern_return_t kret;
     mach_msg_type_number_t count = TASK_DYLD_INFO_COUNT;
     struct task_dyld_info info;
