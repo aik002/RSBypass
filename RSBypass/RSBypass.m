@@ -7,6 +7,7 @@
 #include <mach-o/dyld_images.h>
 #include <mach-o/dyld.h>
 #include <mach/mach_vm.h>
+#include <sys.h>
 
 //function prototype definition
 uint64_t find_image_load_address(void);
@@ -41,6 +42,19 @@ void* FindPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
         if (bCompare((BYTE*)(dwAddress + i), bMask, szMask))
             return (void*)(dwAddress + i);
     return NULL;
+}
+
+
+int processIsTranslated() {
+   int ret = 0;
+   size_t size = sizeof(ret);
+   if (sysctlbyname("sysctl.proc_translated", &ret, &size, NULL, 0) == -1)
+   {
+      if (errno == ENOENT)
+         return 0;
+      return -1;
+   }
+   return ret;
 }
 
 @implementation RSBypass
