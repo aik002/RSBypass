@@ -138,7 +138,7 @@ uint64_t find_image_load_address() {
         return 0;
     }
     all_image_infos = (struct dyld_all_image_infos*)info.all_image_info_addr;
-    image_info = (struct dyld_image_info*)all_image_infos->infoArray;
+    image_info = (struct dyld_image_info*)all_image_infos->aotInfoArray;
 
     return (uint64_t)image_info->imageLoadAddress;
 }
