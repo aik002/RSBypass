@@ -8,4 +8,4 @@ See [CustomsForge, How to Add Custom Songs on Mac](https://customsforge.com/inde
 If you have problems please join the CustomsForge discord server so we can help you make it work!
 https://discord.com/invite/cf
 
-Donations: paypal.me/starbfly4
+Donations: https://paypal.me/starbfly4
