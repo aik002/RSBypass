@@ -12,8 +12,8 @@ elif [ 1 -eq "$(echo "${OSX_VERSION} < 10.14" | bc -l)" ]; then # Older than Mon
 else
     DYLIB_FOLDER=x64
 fi
-DYLIB="$DYLIB_FOLDER/libRSBypass.dylib"
+DYLIB="$DYLIB_FOLDER/RSBypass.dylib"
 
 cd "`dirname "$0"`"
 cp "$DYLIB" "$RS_PATH/"
-./insert_dylib --inplace "$RS_PATH/libRSBypass.dylib" "$RS_PATH/Rocksmith2014"
+./insert_dylib --inplace "$RS_PATH/RSBypass.dylib" "$RS_PATH/Rocksmith2014"
