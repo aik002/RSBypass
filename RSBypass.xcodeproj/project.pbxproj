@@ -14,6 +14,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2EA280E127F8532E00855272 /* insert_dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = insert_dylib; sourceTree = "<group>"; };
+		2EA280E227F8533B00855272 /* RUN_PATCH_RS.command */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RUN_PATCH_RS.command; sourceTree = "<group>"; };
 		2ECA8D91274E719900A2C10F /* libBypass.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libBypass.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		43D71327182937A10089274E /* RSBypass-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RSBypass-Prefix.pch"; path = "RSBypass/RSBypass-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		43D71328182937A10089274E /* RSBypass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSBypass.h; path = RSBypass/RSBypass.h; sourceTree = SOURCE_ROOT; };
@@ -65,6 +67,7 @@
 		FA88A0841680711D00915B81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2EA280E127F8532E00855272 /* insert_dylib */,
 				FA88A08A1680711D00915B81 /* Foundation.framework */,
 				FA88A0881680711D00915B81 /* AppKit.framework */,
 				FA88A0851680711D00915B81 /* Cocoa.framework */,
@@ -75,6 +78,7 @@
 		FA88A08B1680711D00915B81 /* RSBypass */ = {
 			isa = PBXGroup;
 			children = (
+				2EA280E227F8533B00855272 /* RUN_PATCH_RS.command */,
 				43D71327182937A10089274E /* RSBypass-Prefix.pch */,
 				43D71328182937A10089274E /* RSBypass.h */,
 				43D71329182937A10089274E /* RSBypass.m */,
