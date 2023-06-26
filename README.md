@@ -9,3 +9,5 @@ If you have problems please join the CustomsForge discord server so we can help 
 https://discord.com/invite/cf
 
 Donations: https://paypal.me/starbfly4
+
+Original Injector: https://github.com/rscustom/RSInjector-Mac
