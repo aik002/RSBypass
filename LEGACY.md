@@ -22,4 +22,4 @@ If you're getting this error, it means that the patch was built for a newer
 version of OSX and will not run on your machine as is.
 
 You can try running the old patch, found here:
-https://cdn.discordapp.com/attachments/631523444588019767/1017232040527155230/MAC_Patch.zip
+https://github.com/aik002/RSBypass/raw/main/Legacy_Patch.zip
