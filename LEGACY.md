@@ -18,7 +18,7 @@ dyld: Symbol not found: ____chkstk_darwin
   Expected in: /usr/lib/libSystem.B.dylib
 ```
 
-If you're getting this error, it means that the patch was built for an older
+If you're getting this error, it means that the patch was built for a newer
 version of OSX and will not run on your machine as is.
 
 You can try running the old patch, found here:
