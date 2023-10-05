@@ -19,7 +19,7 @@ typedef int8_t  BYTE;
 // These numbers come from otool -lv
 // const DWORD  segStart = 0x001000;
 // const size_t segLen   = 0x013ce000;
-const size_t segLen   = 0x013CE9BC;
+const size_t segLen   = 0x013CE000;
 
 // Could be made more general to bypass all signature checks
 // including ini files...
@@ -56,7 +56,7 @@ long FindLongPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
     NSLog(@"RSBypass: load()");
 
     uint64_t addr = find_image_load_address();
-    uint64_t segStart = addr + 0x1510;
+    uint64_t segStart = addr + 0x1000;
 
     NSLog(@"Addr=%llu", addr);
     
@@ -65,16 +65,16 @@ long FindLongPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
         if (ptr) {
             
             long page_size = sysconf(_SC_PAGESIZE);
-            long page_start = ptr - page_size;
+            long page_start = ptr & -page_size;
             
             NSLog(@"Attempting Removing memory protection");
-            if(mprotect((void  *)page_start, page_size, PROT_READ | PROT_WRITE) == 0){
+            if(mprotect((voidPtr)page_start, page_size, PROT_READ | PROT_WRITE) == 0){
             	
                 NSLog(@"RSInjector: Bypassing signature check at %ld", ptr);
-            memset((void *)ptr, 0x90, 9);
-            msync((void *)ptr, 9, MS_SYNC);
+            memset((voidPtr)ptr, 0x90, 9);
+            msync((voidPtr)ptr, 9, MS_SYNC);
             
-            mprotect((void *)page_start, page_size, PROT_READ | PROT_EXEC);
+            mprotect((voidPtr)page_start, page_size, PROT_READ | PROT_EXEC);
             }else{
                 NSLog(@"Memory Operation failed: \nmprotect: %s\n", strerror(errno));
             }
