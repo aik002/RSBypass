@@ -19,7 +19,7 @@ typedef int8_t  BYTE;
 // These numbers come from otool -lv
 // const DWORD  segStart = 0x001000;
 // const size_t segLen   = 0x013ce000;
-const size_t segLen   = 0x013CE9BC1;
+const size_t segLen   = 0x013CE9BC;
 
 // Could be made more general to bypass all signature checks
 // including ini files...
@@ -43,6 +43,13 @@ void* FindPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
     return NULL;
 }
 
+long FindLongPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
+    for (DWORD i = 0; i < dwLen; i++)
+        if (bCompare((BYTE*)(dwAddress + i), bMask, szMask))
+            return (long) (dwAddress + i);
+    return 0;
+}
+
 @implementation RSBypass
 +(void)load
 {
@@ -54,21 +61,20 @@ void* FindPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
     NSLog(@"Addr=%llu", addr);
     
     if (addr) {
-        void* ptr = FindPattern(segStart, segLen, (BYTE*)hint, "xxxxxxxxx");
+        long ptr = FindLongPattern(segStart, segLen, (BYTE*)hint, "xxxxxxxxx");
         if (ptr) {
             
             long page_size = sysconf(_SC_PAGESIZE);
-            
-            void* page_start = (long)ptr & -page_size;
+            long page_start = ptr - page_size;
             
             NSLog(@"Attempting Removing memory protection");
-            if(mprotect(page_start, page_size, PROT_READ | PROT_WRITE) == 0){
+            if(mprotect((void  *)page_start, page_size, PROT_READ | PROT_WRITE) == 0){
             	
-            NSLog(@"RSInjector: Bypassing signature check at %p", ptr);
-            memset(ptr, 0x90, 9);
-            msync(ptr, 9, MS_SYNC);
+                NSLog(@"RSInjector: Bypassing signature check at %ld", ptr);
+            memset((void *)ptr, 0x90, 9);
+            msync((void *)ptr, 9, MS_SYNC);
             
-            mprotect(page_start, page_size, PROT_READ | PROT_EXEC);
+            mprotect((void *)page_start, page_size, PROT_READ | PROT_EXEC);
             }else{
                 NSLog(@"Memory Operation failed: \nmprotect: %s\n", strerror(errno));
             }
@@ -123,7 +129,7 @@ void* FindPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
 //    return (unsigned long)image_info->imageLoadAddress;
 //}
 
-uint64_t find_image_load_address() {
+uint64_t find_image_load_address(void) {
     //uint64_t addr = 0; unused
     kern_return_t kret;
     mach_msg_type_number_t count = TASK_DYLD_INFO_COUNT;
@@ -134,11 +140,11 @@ uint64_t find_image_load_address() {
 
     kret = task_info(task, TASK_DYLD_INFO, (task_info_t)&info, &count);
     if (kret != KERN_SUCCESS) {
-        // printf("task_info() failed, error %d - %s\n", kret, mach_error_string(kret));
+        printf("task_info() failed, error %d - %s\n", kret, mach_error_string(kret));
         return 0;
     }
     all_image_infos = (struct dyld_all_image_infos*)info.all_image_info_addr;
-    image_info = (struct dyld_image_info*)all_image_infos->aotInfoArray;
+    image_info = (struct dyld_image_info*)all_image_infos->infoArray;
 
     return (uint64_t)image_info->imageLoadAddress;
 }
