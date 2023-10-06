@@ -19,15 +19,15 @@ typedef int8_t  BYTE;
 // Mac OS 64 Bit
 // These numbers come from otool -lv
 // const DWORD  segStart = 0x001000;
- const size_t segLen   = 0x013ce000 ;
-//const size_t segLen   = 0x013CE9BC1;
+// const size_t segLen   = 0x013ce000 ;
+const size_t segLen   = 0x013CE9BC;
 
 // Could be made more general to bypass all signature checks
 // including ini files...
 // For the time being only patches the sig verif of sng files
 // const char*  hint     = "\x0f\x84\xc6\x0a\x00\x00";
  const char*  hintold     = "\x84\xdb\x0f\x84\xde\x0a\x00\x00";
-const char*  hint     = "\x45\x84\xF6\x0F\x84\xCF\x0A\x00\x00";
+const char*  hint     = "\x45\x84\xF6\x0F\x84\xCF\x0A\x00";
 
 
 bool bCompare(const BYTE* pData, const BYTE * bMask, const char* szMask) {
@@ -61,6 +61,7 @@ long FindLongPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
     NSEnumerator *enumerator = [addresses objectEnumerator];
     struct mach_header *anAddress;
     NSValue *aWrappedAddress;
+    int i=0;
     
     // Interate and unwrap each mach header.
     while (aWrappedAddress = [enumerator nextObject]) {
@@ -68,14 +69,14 @@ long FindLongPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
         
         uint64_t addr = anAddress;
         uint64_t segStart = addr; //  + 0x1500;
-        size_t segLen = anAddress->sizeofcmds;
+//        size_t segLen = anAddress->sizeofcmds * 2000;
         // These aren't large.  I'm not sure about sizeofcmds, but 0x13ce900 for segLen was SIGSEGVing.
         // Or possibly check longer using vm_read() as per https://gist.github.com/xcxcxc/989018646b1f0f2f31f0873a32c4a658 .
         
-        NSLog(@"Addr=%p Len=%lu\n", addr, segLen);
+        NSLog(@"Count=%d Addr=%p Len=%lu\n", i++, addr, segLen);
         
         if (addr) {
-            void* ptr = FindPattern(segStart, segLen, (BYTE*)hint, "xxxxxxxxx");
+            void* ptr = FindPattern(segStart, segLen, (BYTE*)hint, "xxxxxxxx");
             NSLog(@"Ptr=%p", ptr);
             if (ptr) {
                 
@@ -98,6 +99,7 @@ long FindLongPattern(DWORD dwAddress, size_t dwLen, BYTE* bMask, char* szMask) {
             }
         }
     }
+    NSLog(@"RSBypass: exiting load()");
 }
 /*
 @implementation RSBypass
@@ -202,11 +204,12 @@ NSMutableArray *find_image_load_addresses(void) {
     
     for (int i = 0 ; i < all_image_infos->infoArrayCount ; i++) {
         image_info = all_image_infos->infoArray[i];
-        char *found = strstr(image_info.imageFilePath, "Rocksmith");
+        char *found = strstr(image_info.imageFilePath, "MacOS/Rocksmith2014");
+        char *RSBypass = strstr(image_info.imageFilePath, "RSBypass");
         
-        if (found) {
+        if (found && !RSBypass) {
             const struct mach_header *address = image_info.imageLoadAddress;
-//            printf("address: %p\n", address);
+            printf("count %d name %s address %p len %lx\n", i, image_info.imageFilePath, address, address->sizeofcmds);
             NSValue *value = [NSValue valueWithPointer:address];
             [addresses addObject:value];
         }
