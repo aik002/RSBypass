@@ -1,4 +1,7 @@
-RS_PATH="/Users/$USER/Library/Application Support/Steam/steamapps/common/Rocksmith2014/Rocksmith2014.app/Contents/MacOS"
+set -e
+RS_PATH="$(/usr/bin/env python3 `dirname $0`/FindRSPath.py)/steamapps/common/Rocksmith2014/Rocksmith2014.app/Contents/MacOS"
+set +e
+
 OSX_VERSION=$(sw_vers -productVersion | cut -d '.' -f 1,2)
 ARCH=$(uname -m)
 LEGACY_LINK="https://github.com/aik002/RSBypass/blob/main/LEGACY.md"
