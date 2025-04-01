@@ -1,3 +1,7 @@
+# WARNING! macOS Sequoia 15.4 is confirmed to entirely break the game!
+Do NOT update to 15.4 if you care about Rocksmith 2014 working.
+The issue is independent from the patch and also happens on a vanilla unmodified install of the game.
+
 # RSBypass
 Rocksmith 2014 uses a DSA signature to verify the authenticity of songs.
 This app is a runtime patch for Rocksmith 2014 OSX which allows playing
